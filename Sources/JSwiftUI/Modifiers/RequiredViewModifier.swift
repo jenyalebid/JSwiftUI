@@ -22,7 +22,7 @@ struct RequiredViewModifier: ViewModifier {
             ZStack {
                 content
                     .padding(padding)
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: 5)
                     .strokeBorder(lineWidth: 1)
                     .foregroundColor(Color(uiColor: .red))
             }
@@ -33,7 +33,7 @@ struct RequiredViewModifier: ViewModifier {
     }
 }
 
-extension View {
+public extension View {
     
     func requiredOutline(_ isRequired: Bool, padding: CGFloat = 0) -> some View {
         modifier(RequiredViewModifier(isRequired: isRequired, padding: padding))
