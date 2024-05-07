@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import SwiftUIIntrospect
 
 public struct PullDownScrollView<Content: View, PullDownContent: View>: View {
     
     @State private var scrollPosition: CGFloat = .zero
     @State private var lastRecordedScroll: CGFloat = .zero
     @State private var pullDownGeometry: CGFloat = .zero
+    
+    @State private var isDragging = false
     
     private var scrollID = "pulldownScrolView-\(UUID().uuidString)"
     
@@ -56,7 +59,98 @@ public struct PullDownScrollView<Content: View, PullDownContent: View>: View {
             }
             .coordinateSpace(name: scrollID)
         }
-        .clipped()
+//        .clipped()
+    }
+    
+    private func makeCoordinator(scrollView: UIScrollView) -> Coordinator {
+          Coordinator(isDragging: $isDragging, scrollView: scrollView)
+    }
+}
+
+struct DraggableScrollView: UIViewRepresentable {
+    @Binding var isDragging: Bool
+
+    func makeUIView(context: Context) -> UIScrollView {
+        let scrollView = UIScrollView()
+        scrollView.delegate = context.coordinator
+        setupScrollView(scrollView: scrollView)
+        return scrollView
+    }
+
+    func updateUIView(_ uiView: UIScrollView, context: Context) {
+        // Update logic if needed
+    }
+
+    // Coordinator to act as UIScrollViewDelegate
+    func makeCoordinator() -> Coordinator {
+        Coordinator(isDragging: $isDragging)
+    }
+
+    class Coordinator: NSObject, UIScrollViewDelegate {
+        @Binding var isDragging: Bool
+
+        init(isDragging: Binding<Bool>) {
+            _isDragging = isDragging
+        }
+
+        func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+            isDragging = true
+        }
+
+        func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+            if !decelerate {
+                isDragging = false
+            }
+        }
+
+        func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+            isDragging = false
+        }
+    }
+
+    private func setupScrollView(scrollView: UIScrollView) {
+        // Setup content for scrollView in a UIKit way
+        let contentView = UIView()
+        contentView.backgroundColor = .lightGray
+        let contentSize = 1000
+        contentView.frame = CGRect(x: 0, y: 0, width: scrollView.frame.size.width, height: CGFloat(contentSize))
+
+        for i in 0..<50 {
+            let label = UILabel(frame: CGRect(x: 20, y: i * 20, width: Int(scrollView.frame.size.width) - 40, height: 18))
+            label.text = "Item \(i)"
+            label.textColor = .black
+            contentView.addSubview(label)
+        }
+
+        scrollView.addSubview(contentView)
+        scrollView.contentSize = CGSize(width: scrollView.frame.size.width, height: CGFloat(contentSize))
+    }
+}
+
+fileprivate class Coordinator: NSObject, UIScrollViewDelegate {
+    
+    @Binding var isDragging: Bool
+    weak var scrollView: UIScrollView?
+
+    init(isDragging: Binding<Bool>, scrollView: UIScrollView) {
+        _isDragging = isDragging
+        self.scrollView = scrollView
+        super.init()
+        scrollView.delegate = self  // Ensure the delegate is set to self
+    }
+
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        isDragging = true
+    }
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            isDragging = false
+        }
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        isDragging = false
     }
 }
 
