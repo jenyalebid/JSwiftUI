@@ -1,13 +1,12 @@
 //
-//  SwiftUIView.swift
-//
+//  PullDownScrollView.swift
+//  JSwiftUI
 //
 //  Created by Jenya Lebid on 4/20/24.
 //
 
 import SwiftUI
-import SwiftUIIntrospect
-
+ 
 public struct PullDownScrollView<Content: View, PullDownContent: View>: View {
     
     @State private var scrollPosition: CGFloat = .zero
