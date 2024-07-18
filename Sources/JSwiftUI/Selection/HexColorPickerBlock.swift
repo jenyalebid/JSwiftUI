@@ -25,7 +25,7 @@ public struct HexColorPickerBlock: View {
             Text(title)
         }
         .onChange(of: color) { newValue in
-            colorText = newValue.hex
+            colorText = newValue.hex ?? ""
         }
         .onChange(of: colorText) { newValue in
             if color.hex != newValue {

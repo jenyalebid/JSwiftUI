@@ -29,8 +29,13 @@ public struct DismissButton: View {
             Image(systemName: "xmark")
                 .foregroundStyle(.gray)
                 .fontWeight(.bold)
+                .padding(7)
+                .background(Color(uiColor: .systemGray5))
+                .clipShape(Circle())
         }
-        .buttonStyle(.bordered)
-        .buttonBorderShape(.circle)
     }
+}
+
+#Preview {
+    DismissButton()
 }

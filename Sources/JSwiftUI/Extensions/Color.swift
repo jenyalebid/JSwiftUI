@@ -36,11 +36,25 @@ public extension Color {
 
 public extension Color {
     
-    var hex: String {
-        let components = self.cgColor!.components!
-        let r = components[0]
-        let g = components[1]
-        let b = components[2]
-        return String(format: "%02X%02X%02X", (Int)(r * 255), (Int)(g * 255), (Int)(b * 255))
+    var hex: String? {
+        guard let cgColor = self.cgColor else { return nil }
+        guard let components = cgColor.components else { return nil }
+        
+        var r, g, b: CGFloat
+        let numberOfComponents = cgColor.numberOfComponents
+        
+        if numberOfComponents == 2 { // Grayscale and alpha
+            r = components[0]
+            g = components[0]
+            b = components[0]
+        } else if numberOfComponents == 4 { // RGB and alpha
+            r = components[0]
+            g = components[1]
+            b = components[2]
+        } else {
+            return nil // Unsupported color space
+        }
+        
+        return String(format: "%02X%02X%02X", Int(r * 255), Int(g * 255), Int(b * 255))
     }
 }
