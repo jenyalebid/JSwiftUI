@@ -32,6 +32,7 @@ public struct DismissButton: View {
                 .padding(7)
                 .background(Color(uiColor: .systemGray5))
                 .clipShape(Circle())
+                .imageScale(.medium)
         }
     }
 }
