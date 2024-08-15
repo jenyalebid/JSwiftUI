@@ -22,14 +22,42 @@ public extension Color {
         case 8: // ARGB (32-bit)
             (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
         default:
-            (a, r, g, b) = (1, 1, 1, 0)
+            (a, r, g, b) = (255, 0, 0, 0)
         }
         self.init(
             .sRGB,
-            red: Double(r) / 255.0,
-            green: Double(g) / 255.0,
-            blue:  Double(b) / 255.0,
-            opacity: Double(a) / 255.0
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue: Double(b) / 255,
+            opacity: Double(a) / 255
+        )
+    }
+}
+
+public extension Color {
+    
+    func lighter(by percentage: CGFloat = 0.2) -> Color {
+        return self.adjust(by: abs(percentage))
+    }
+
+    func darker(by percentage: CGFloat = 0.2) -> Color {
+        return self.adjust(by: -abs(percentage))
+    }
+
+    func adjust(by percentage: CGFloat = 0.2) -> Color {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+
+        UIColor(self).getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+        return Color(
+            .sRGB,
+            red: min(red + percentage, 1.0),
+            green: min(green + percentage, 1.0),
+            blue: min(blue + percentage, 1.0),
+            opacity: alpha
         )
     }
 }
