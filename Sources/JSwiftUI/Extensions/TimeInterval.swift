@@ -14,6 +14,7 @@ public extension TimeInterval {
         let hourText = abbreviated ? "hr" : "hour"
         let minText = abbreviated ? "min" : "minute"
         let minutesText = abbreviated ? "min" : "minutes"
+        let secondsText = abbreviated ? "s" : "seconds"
         
         let time = Int(self)
         let seconds = time % 60
@@ -34,7 +35,7 @@ public extension TimeInterval {
         } else if minutes == 1 {
             return "1 \(minText)"
         } else {
-            return "\(seconds) s"
+            return "\(seconds) \(secondsText)"
         }
     }
     
