@@ -24,10 +24,10 @@ public struct HexColorPickerBlock: View {
         ColorPicker(selection: $color) {
             Text(title)
         }
-        .onChange(of: color) { newValue in
+        .onChange(of: color) { oldValue, newValue in
             colorText = newValue.hex ?? ""
         }
-        .onChange(of: colorText) { newValue in
+        .onChange(of: colorText) { oldValue, newValue in
             if color.hex != newValue {
                 color = Color(hex: newValue)
             }
