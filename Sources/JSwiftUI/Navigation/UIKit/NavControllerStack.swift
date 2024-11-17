@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  NavControllerStack.swift
 //  JSwiftUI
 //
 //  Created by Jenya Lebid on 11/10/24.
@@ -16,16 +16,16 @@ public extension Notification.Name {
 
 public struct NavControllerStack<Root: View>: View {
     
-    @State private var navigation: Navigation
+    @State private var navigation: UIKitNavigation
     @ViewBuilder var root: Root
     
     public init(id: String = UUID().uuidString, _ root: Root) {
-        self._navigation = State(initialValue: Navigation(id: id))
+        self._navigation = State(initialValue: UIKitNavigation(id: id))
         self.root = root
     }
     
     public init(id: String = UUID().uuidString, @ViewBuilder _ root: () -> Root) {
-        self._navigation = State(initialValue: Navigation(id: id))
+        self._navigation = State(initialValue: UIKitNavigation(id: id))
         self.root = root()
     }
     
@@ -58,13 +58,13 @@ public struct NavControllerStack<Root: View>: View {
                 }
             }
         }
-        .environment(\.navigation, navigation)
+        .environment(\.uiKitNavigation, navigation)
     }
 }
 
 fileprivate struct NavRepresentable<Root: View>: UIViewControllerRepresentable {
     
-    var navigation: Navigation
+    var navigation: UIKitNavigation
     @ViewBuilder var root: Root
     
     func makeUIViewController(context: Context) -> UINavigationController {

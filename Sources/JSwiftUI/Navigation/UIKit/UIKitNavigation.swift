@@ -21,33 +21,59 @@ public extension EnvironmentValues {
 @Observable
 public class UIKitNavigation {
     
-    public var id = UUID().uuidString
+    public private(set) var viewController = UINavigationController()
     
-    /// ViewController which is assigned from UIKit.
-    public var viewController: UINavigationController?
-    
-    public var isSetup: Bool {
-        viewController != nil
-    }
+    public var id: String
     
     public init(id: String = UUID().uuidString) {
         self.id = id
     }
     
-    public func setup(_ viewController: UINavigationController) {
+    public func setupController(from viewController: UINavigationController) {
         self.viewController = viewController
     }
+}
+
+public extension UIKitNavigation {
     
     func push<V: View>(_ view: V, animated: Bool = true) {
         let host = UIHostingController(rootView: view)
-        viewController?.pushViewController(host, animated: animated)
+        host.navigationItem.largeTitleDisplayMode = .never
+        host.navigationItem.style = .browser
+        host.toolbarItems = nil
+        
+        viewController.pushViewController(host, animated: animated)
     }
     
     func pop(animated: Bool = true) {
-        viewController?.popViewController(animated: animated)
+        viewController.popViewController(animated: animated)
     }
     
     func goBack(animated: Bool = true) {
-        viewController?.topViewController?.dismiss(animated: animated)
+        viewController.topViewController?.dismiss(animated: animated)
+    }
+}
+
+fileprivate struct UIKitNavigationModifier<I: Hashable, V: View>: ViewModifier {
+    
+    @Binding var item: I?
+    @ViewBuilder var destination: (_: I) -> V
+    @Environment(\.uiKitNavigation) private var navigation
+    
+    func body(content: Content) -> some View {
+        content
+            .onChange(of: item) { oldValue, newValue in
+                if let newValue {
+                    navigation.push(destination(newValue))
+                }
+            }
+    }
+}
+
+public extension View {
+    
+    func uiKitNavigationDestination<I: Hashable, V: View>(item: Binding<I?>,
+                                                          @ViewBuilder destination: @escaping (_ item: I) -> V) -> some View {
+        modifier(UIKitNavigationModifier(item: item, destination: destination))
     }
 }
