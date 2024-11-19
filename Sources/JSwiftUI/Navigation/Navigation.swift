@@ -39,6 +39,11 @@ public extension Navigation { //MARK: UIKit
     func hidesBarsOnSwipe(_ hide: Bool) {
         controller?.hidesBarsOnSwipe = hide
     }
+    
+    func clearStack() {
+        controller?.popToRootViewController(animated: true)
+        path = NavigationPath()
+    }
 }
 
 public struct NavStack<Root: View>: View {
