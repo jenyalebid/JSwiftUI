@@ -11,12 +11,17 @@ import SwiftUI
 struct ScrollToTopModifier: ViewModifier {
     
     @Weak private var scrollView: UIScrollView?
+    @State private var initialNavBarHeight: CGFloat?
+    @Environment(\.navigation) private var navigation
 
     func body(content: Content) -> some View {
         content
             .introspect(.scrollView, on: .iOS(.v17, .v18), customize: { scrollView in
                 self.scrollView = scrollView
             })
+            .onAppear {
+                initialNavBarHeight = navigation.controller?.navigationBar.frame.height
+            }
             .onReceive(NotificationCenter.default.publisher(for: .scrollToTop)) { _ in
 //                let topOffset = CGPoint(x: 0, y: -(scrollView?.adjustedContentInset.top ?? 0))
 //                scrollView?.setContentOffset(topOffset, animated: true)
