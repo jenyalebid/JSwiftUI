@@ -9,12 +9,21 @@ import SwiftUI
 
 public struct DismissButton: View {
     
+    public enum Style {
+        case xmark
+        case done
+    }
+    
     @Environment(\.dismiss) var dismiss
     
     var environmentDismiss: Bool
     var onDismiss: () -> Void
     
-    public init(environmentDismiss: Bool = true, onDismiss: @escaping () -> Void = {}) {
+    var style: Style
+    
+    public init(style: Style = .xmark,  environmentDismiss: Bool = true,
+                onDismiss: @escaping () -> Void = {}) {
+        self.style = style
         self.environmentDismiss = environmentDismiss
         self.onDismiss = onDismiss
     }
@@ -26,14 +35,28 @@ public struct DismissButton: View {
                 dismiss()
             }
         } label: {
-            Image(systemName: "xmark")
-                .foregroundStyle(.gray)
-                .fontWeight(.bold)
-                .padding(7)
-                .background(Color(uiColor: .systemGray5))
-                .clipShape(Circle())
-                .imageScale(.medium)
+            switch style {
+            case .xmark:
+                xmark
+            case .done:
+                done
+            }
         }
+    }
+    
+    var xmark: some View {
+        Image(systemName: "xmark")
+            .foregroundStyle(.gray)
+            .fontWeight(.bold)
+            .padding(7)
+            .background(Color(uiColor: .systemGray5))
+            .clipShape(Circle())
+            .imageScale(.medium)
+    }
+    
+    var done: some View {
+        Text("Done")
+            .font(.headline)
     }
 }
 
