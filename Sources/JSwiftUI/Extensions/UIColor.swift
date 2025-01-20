@@ -48,3 +48,52 @@ extension UIColor {
         return nil
     }
 }
+
+public extension UIColor {
+    
+    func bestContrast() -> UIColor {
+        var r, g, b, a: CGFloat
+        (r, g, b, a) = (0, 0, 0, 0)
+        self.getRed(&r, green: &g, blue: &b, alpha: &a)
+        let luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+        return  luminance < 0.6 ? .white : .black
+    }
+}
+
+@objc(UIColorValueTransformer)
+public final class UIColorTransformer: ValueTransformer {
+
+    public override class func transformedValueClass() -> AnyClass {
+        return UIColor.self
+    }
+
+    public override func transformedValue(_ value: Any?) -> Any? {
+        guard let color = value as? UIColor else { return nil }
+        do {
+            let data = try NSKeyedArchiver.archivedData(withRootObject: color, requiringSecureCoding: true)
+            return data
+        } catch {
+            return nil
+        }
+    }
+
+    public override func reverseTransformedValue(_ value: Any?) -> Any? {
+        guard let data = value as? Data else { return nil }
+    
+        do {
+            let color = try NSKeyedUnarchiver.unarchivedObject(ofClass: UIColor.self, from: data)
+            return color
+        } catch {
+            return nil
+        }
+    }
+}
+
+extension UIColorTransformer {
+    static let name = NSValueTransformerName(rawValue: String(describing: UIColorTransformer.self))
+
+    public static func register() {
+        let transformer = UIColorTransformer()
+        ValueTransformer.setValueTransformer(transformer, forName: name)
+    }
+}
