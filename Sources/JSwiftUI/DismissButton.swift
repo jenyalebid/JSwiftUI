@@ -60,6 +60,15 @@ public struct DismissButton: View {
     }
 }
 
+public extension DismissButton {
+    
+    func toolbarItem(placement: ToolbarItemPlacement = .automatic) -> some ToolbarContent {
+        ToolbarItem(placement: placement) {
+            self
+        }
+    }
+}
+
 #Preview {
     DismissButton()
 }
