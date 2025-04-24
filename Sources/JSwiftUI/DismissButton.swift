@@ -14,15 +14,14 @@ public struct DismissButton: View {
         case done
     }
     
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
     
-    var environmentDismiss: Bool
-    var onDismiss: () -> Void
+    private var environmentDismiss: Bool
+    private var onDismiss: (() -> Void)?
     
-    var style: Style
+    private var style: Style
     
-    public init(style: Style = .xmark,  environmentDismiss: Bool = true,
-                onDismiss: @escaping () -> Void = {}) {
+    public init(style: Style = .xmark, environmentDismiss: Bool = true, onDismiss: (() -> Void)? = nil) {
         self.style = style
         self.environmentDismiss = environmentDismiss
         self.onDismiss = onDismiss
@@ -30,7 +29,7 @@ public struct DismissButton: View {
 
     public var body: some View {
         Button {
-            onDismiss()
+            onDismiss?()
             if environmentDismiss {
                 dismiss()
             }
