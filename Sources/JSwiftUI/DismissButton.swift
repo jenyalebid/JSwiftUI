@@ -12,6 +12,7 @@ public struct DismissButton: View {
     public enum Style {
         case xmark
         case done
+        case cancel
     }
     
     @Environment(\.dismiss) private var dismiss
@@ -39,6 +40,8 @@ public struct DismissButton: View {
                 xmark
             case .done:
                 done
+            case .cancel:
+                cancel
             }
         }
     }
@@ -56,6 +59,10 @@ public struct DismissButton: View {
     var done: some View {
         Text("Done")
             .font(.headline)
+    }
+    
+    var cancel: some View {
+        Text("Cancel")
     }
 }
 
