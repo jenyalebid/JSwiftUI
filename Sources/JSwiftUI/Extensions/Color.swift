@@ -95,3 +95,15 @@ public extension Color {
         return String(format: "%02X%02X%02X", Int(r * 255), Int(g * 255), Int(b * 255))
     }
 }
+
+public extension Color {
+    
+    static func secondaryLabel(for colorScheme: ColorScheme, opacity: CGFloat = 0.6) -> Self {
+        switch colorScheme {
+        case .dark:
+            Color(.sRGB, red: 235/255, green: 235/255, blue: 245/255, opacity: opacity)
+        case .light:
+            Color(.sRGB, red: 60/255, green: 60/255, blue: 67/255, opacity: opacity)
+        }
+    }
+}
