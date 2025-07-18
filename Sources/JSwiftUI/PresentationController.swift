@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-public protocol PresentationViewHost: View, Identifiable {}
+public protocol PresentationViewHost: View, Identifiable, Equatable {}
 
 @Observable
 public class PresentationController<ViewHost: PresentationViewHost> {
     
-    internal var activeSheet: ViewHost?
+    public internal(set) var activeSheet: ViewHost?
     
     /// Calls presentation of a specified sheet view.
     /// - Important: `presentationController()` modifier must be attached at root view of intended
