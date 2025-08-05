@@ -57,41 +57,7 @@ public extension TimeInterval {
         let minutes = totalMinutes % 60
         return (hours, minutes)
     }
-    
-//    func convertSeconds(to component: Calendar.Component) -> Double? {
-//        let secondsInUnit: Double?
-//        
-//        switch component {
-//        case .second:
-//            secondsInUnit = 1
-//        case .minute:
-//            secondsInUnit = 60
-//        case .hour:
-//            secondsInUnit = 3600
-//        case .day:
-//            secondsInUnit = 86400
-//        case .weekOfYear, .weekOfMonth:
-//            secondsInUnit = 604800
-//        case .month:
-//            // Approximation: 30.44 days per month
-//            secondsInUnit = 86400 * 30.44
-//        case .year:
-//            // Approximation: 365.25 days per year
-//            secondsInUnit = 86400 * 365.25
-//        default:
-//            // Return nil if the component is not supported
-//            secondsInUnit = nil
-//        }
-//        
-//        // If a valid component was provided, return the converted value
-//        if let secondsInUnit = secondsInUnit {
-//            return self / secondsInUnit
-//        } else {
-//            // Unsupported component
-//            return nil
-//        }
-//    }
-    
+
     func convert(from sourceComponent: Calendar.Component, to targetComponent: Calendar.Component) -> Double? {
         let secondsInSourceUnit: Double?
         let secondsInTargetUnit: Double?

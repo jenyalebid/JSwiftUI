@@ -46,14 +46,24 @@ public struct DismissButton: View {
         }
     }
     
+    @ViewBuilder
     var xmark: some View {
-        Image(systemName: "xmark")
-            .foregroundStyle(.gray)
-            .fontWeight(.bold)
-            .padding(7)
-            .background(Color(uiColor: .systemGray5))
-            .clipShape(Circle())
-            .imageScale(.medium)
+        if #available(iOS 26, *) {
+            Image(systemName: "xmark")
+                .foregroundStyle(.secondary)
+                .fontWeight(.bold)
+//                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
+        }
+        else {
+            Image(systemName: "xmark")
+                .foregroundStyle(.gray)
+                .fontWeight(.bold)
+                .padding(7)
+                .background(Color(uiColor: .systemGray5))
+                .clipShape(Circle())
+                .imageScale(.medium)
+        }
     }
     
     var done: some View {

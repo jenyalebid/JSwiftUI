@@ -20,6 +20,11 @@ public class PresentationController<ViewHost: PresentationViewHost> {
     public func sheet(for viewHost: ViewHost) {
         self.activeSheet = viewHost
     }
+    
+    /// Dismiss any actively presented sheet.
+    public func dismiss() {
+        activeSheet = nil
+    }
 }
 
 fileprivate struct PresentationControllerModifier<ViewHost: PresentationViewHost>: ViewModifier {
