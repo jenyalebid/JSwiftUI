@@ -9,10 +9,12 @@ import SwiftUI
 
 public struct PrimaryActionButtonStyle: ButtonStyle {
     
-    var style: Style
+    private var style: Style
+    private var feedback: SensoryFeedback
     
-    public init(_ style: Style = .accent) {
+    public init(_ style: Style = .accent, feedback: SensoryFeedback = .selection) {
         self.style = style
+        self.feedback = feedback
     }
     
     public enum Style {
@@ -23,6 +25,8 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
     
     @Environment(\.isEnabled) private var enabled
     @Environment(\.colorScheme) private var colorScheme
+    
+    @State private var feedbackToggle = false
     
     private var foregroundColor: Color {
         switch style {
@@ -81,6 +85,11 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
             .shadow(radius: 5)
             .opacity(opacity(for: configuration))
             .padding()
+            .sensoryFeedback(feedback, trigger: feedbackToggle)
+            .onChange(of: configuration.isPressed) { _, isPressed in
+                guard isPressed else { return }
+                feedbackToggle.toggle()
+            }
     }
     
     private func opacity(for config: Configuration) -> Double {

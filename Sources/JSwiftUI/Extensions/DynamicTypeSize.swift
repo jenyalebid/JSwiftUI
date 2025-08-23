@@ -13,3 +13,11 @@ public extension DynamicTypeSize {
         self >= .xLarge
     }
 }
+
+public extension View {
+    
+    func maxDynamicTypeSize(_ size: DynamicTypeSize, current: DynamicTypeSize) -> some View {
+        self
+            .dynamicTypeSize(current > size ? size : current)
+    }
+}
