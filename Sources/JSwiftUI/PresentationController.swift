@@ -10,7 +10,7 @@ import SwiftUI
 public protocol PresentationViewHost: View, Identifiable, Equatable {}
 
 @Observable
-public class PresentationController<ViewHost: PresentationViewHost> {
+public final class PresentationController<ViewHost: PresentationViewHost>: Sendable {
     
     public internal(set) var activeSheet: ViewHost?
     

@@ -7,9 +7,12 @@
 
 import SwiftUI
 
-public struct DismissButton: View {
+public typealias DismissButtonUI = DismissButton<EmptyView>
+
+public struct DismissButton<L: View>: View {
     
     public enum Style {
+        case custom
         case xmark
         case done
         case cancel
@@ -17,15 +20,26 @@ public struct DismissButton: View {
     
     @Environment(\.dismiss) private var dismiss
     
+    @ViewBuilder
+    private var label: L
     private var environmentDismiss: Bool
     private var onDismiss: (() -> Void)?
     
     private var style: Style
     
-    public init(style: Style = .xmark, environmentDismiss: Bool = true, onDismiss: (() -> Void)? = nil) {
+    public init(style: Style = .xmark,
+                environmentDismiss: Bool = true, onDismiss: (() -> Void)? = nil) where L == EmptyView {
         self.style = style
         self.environmentDismiss = environmentDismiss
         self.onDismiss = onDismiss
+        self.label = EmptyView()
+    }
+    
+    public init(environmentDismiss: Bool = true, onDismiss: (() -> Void)? = nil, @ViewBuilder label: () -> L) {
+        self.style = .custom
+        self.environmentDismiss = environmentDismiss
+        self.onDismiss = onDismiss
+        self.label = label()
     }
 
     public var body: some View {
@@ -36,29 +50,25 @@ public struct DismissButton: View {
             }
         } label: {
             switch style {
+            case .custom:
+                label
             case .xmark:
                 xmark
             case .done:
-                done
+                Self.doneLabel
             case .cancel:
-                cancel
+                Self.cancelLabel
             }
         }
     }
     
     @ViewBuilder
-    var xmark: some View {
+    private var xmark: some View {
         if #available(iOS 26, *) {
-            Image(systemName: "xmark")
-                .foregroundStyle(.secondary)
-                .fontWeight(.bold)
-//                .buttonStyle(.glass)
-                .buttonBorderShape(.circle)
+            Self.xmarkLabel
         }
         else {
-            Image(systemName: "xmark")
-                .foregroundStyle(.gray)
-                .fontWeight(.bold)
+            Self.xmarkLabel
                 .padding(7)
                 .background(Color(uiColor: .systemGray5))
                 .clipShape(Circle())
@@ -66,17 +76,25 @@ public struct DismissButton: View {
         }
     }
     
-    var done: some View {
+
+}
+
+public extension DismissButton {
+    
+    static var xmarkLabel: some View {
+        Image(systemName: "xmark")
+            .foregroundStyle(Color(uiColor: .label))
+            .fontWeight(.bold)
+    }
+    
+    static var doneLabel: some View {
         Text("Done")
             .font(.headline)
     }
     
-    var cancel: some View {
+    static var cancelLabel: some View {
         Text("Cancel")
     }
-}
-
-public extension DismissButton {
     
     func toolbarItem(placement: ToolbarItemPlacement = .automatic) -> some ToolbarContent {
         ToolbarItem(placement: placement) {

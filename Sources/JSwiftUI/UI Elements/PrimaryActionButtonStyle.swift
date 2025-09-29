@@ -7,7 +7,26 @@
 
 import SwiftUI
 
+struct PrimaryActionButtonStyleSettings {
+    
+    var labelFont: Font = .title2
+}
+
+extension EnvironmentValues {
+    @Entry var primaryActionButtonStyleSettings = PrimaryActionButtonStyleSettings()
+}
+
+public extension View {
+    func primaryActionButtonFont(_ font: Font) -> some View {
+        transformEnvironment(\.primaryActionButtonStyleSettings) { settings in
+            settings.labelFont = font
+        }
+    }
+}
+
 public struct PrimaryActionButtonStyle: ButtonStyle {
+    
+    @Environment(\.primaryActionButtonStyleSettings) private var settings
     
     private var style: Style
     private var feedback: SensoryFeedback
@@ -75,7 +94,7 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
     
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.title2)
+            .font(settings.labelFont)
             .fontWeight(.bold)
             .foregroundStyle(foregroundColor)
             .padding()
