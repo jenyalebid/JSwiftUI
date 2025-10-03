@@ -16,7 +16,7 @@ struct ScrollToTopModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .introspect(.scrollView, on: .iOS(.v17, .v18), customize: { scrollView in
+            .introspect(.scrollView, on: .iOS(.v17, .v18, .v26), customize: { scrollView in
                 self.scrollView = scrollView
             })
             .onAppear {

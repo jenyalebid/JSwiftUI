@@ -60,7 +60,7 @@ public struct NavStack<Root: View>: View {
         NavigationStack(path: $navigation.path) {
             root()
         }
-        .introspect(.navigationStack, on: .iOS(.v17, .v18), customize: { controller in
+        .introspect(.navigationStack, on: .iOS(.v17, .v18, .v26), customize: { controller in
             navigation.setupController(controller)
         })
         .environment(\.navigation, navigation)
