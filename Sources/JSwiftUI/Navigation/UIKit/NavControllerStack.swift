@@ -11,6 +11,7 @@ import SwiftUIIntrospect
 public extension Notification.Name {
     static var tabBarItemToggle = Notification.Name("tab_bar_item_toggle")
     static var scrollToTop = Notification.Name("scroll_to_top")
+    static var activateSearch = Notification.Name("activate_search")
 
 }
 

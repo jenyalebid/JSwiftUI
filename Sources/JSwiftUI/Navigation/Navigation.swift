@@ -9,12 +9,17 @@ import SwiftUI
 @_spi(Advanced) import SwiftUIIntrospect
 
 public extension EnvironmentValues {
-    @Entry var navigation = Navigation()
+    @Entry var navigation = Navigation(id: Navigation.defaultID)
 }
 
 
 @Observable
 public class Navigation {
+    
+    static let defaultID = "_default_"
+    
+    /// Indicates if this object is provided by default from EnvironmentValues.
+    public var isDefault: Bool { id == Navigation.defaultID }
     
     public var id: String
     public var path = NavigationPath()
@@ -23,6 +28,11 @@ public class Navigation {
     
     public init(id: String = UUID().uuidString) {
         self.id = id
+    }
+    
+    public init(id: String, controller: UINavigationController?) {
+        self.id = id
+        self.controller = controller
     }
     
     public func setupController(_ controller: UINavigationController) {
@@ -46,6 +56,8 @@ public extension Navigation { //MARK: UIKit
     }
 }
 
+/// Host for SwiftUI `NavigationStack` to capture  the UIKit `UIViewController`.
+/// - Can be accessed with from interioir views with `\.navigation` enviornment.
 public struct NavStack<Root: View>: View {
     
     @State private var navigation: Navigation

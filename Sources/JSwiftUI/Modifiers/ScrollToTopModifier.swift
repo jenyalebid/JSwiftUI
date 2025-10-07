@@ -27,6 +27,9 @@ struct ScrollToTopModifier: ViewModifier {
 //                scrollView?.setContentOffset(topOffset, animated: true)
                 
                 guard (scrollView?.contentOffset.y ?? 0) > 0 else {
+                    if navigation.id == "search" {
+                        NotificationCenter.default.post(name: .activateSearch, object: navigation)
+                    }
                     return
                 }
                 
