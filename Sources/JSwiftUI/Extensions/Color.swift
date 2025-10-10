@@ -104,6 +104,8 @@ public extension Color {
             Color(.sRGB, red: 235/255, green: 235/255, blue: 245/255, opacity: opacity)
         case .light:
             Color(.sRGB, red: 60/255, green: 60/255, blue: 67/255, opacity: opacity)
+        @unknown default:
+            Color(.sRGB, red: 235/255, green: 235/255, blue: 245/255, opacity: opacity)
         }
     }
 }
