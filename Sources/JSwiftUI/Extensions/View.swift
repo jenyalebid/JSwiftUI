@@ -11,6 +11,16 @@ public extension View {
     
     /// Sets the foreground style of view to white or black determined on current background
     /// for best clarity.
+    @ViewBuilder
+    func readableForeground(for color: Color, isEnabled: Bool = true) -> some View {
+        if isEnabled {
+            self.readableForeground(for: color)
+        }
+        else {
+            self
+        }
+    }
+    
     func readableForeground(for color: Color) -> some View {
         var r, g, b, a: CGFloat
         (r, g, b, a) = (0, 0, 0, 0)
