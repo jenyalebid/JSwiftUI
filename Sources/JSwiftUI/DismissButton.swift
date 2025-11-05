@@ -15,6 +15,7 @@ public struct DismissButton<L: View>: View {
         case custom
         case xmark
         case done
+        case save
         case cancel
     }
     
@@ -56,6 +57,8 @@ public struct DismissButton<L: View>: View {
                 xmark
             case .done:
                 Self.doneLabel
+            case .save:
+                Self.saveLabel
             case .cancel:
                 Self.cancelLabel
             }
@@ -85,6 +88,11 @@ public extension DismissButton {
         Image(systemName: "xmark")
             .foregroundStyle(Color(uiColor: .label))
             .fontWeight(.bold)
+    }
+    
+    static var saveLabel: some View {
+        Text("Save")
+            .font(.headline)
     }
     
     static var doneLabel: some View {
