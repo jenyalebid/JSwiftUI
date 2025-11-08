@@ -29,9 +29,9 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
     @Environment(\.primaryActionButtonStyleSettings) private var settings
     
     private var style: Style
-    private var feedback: SensoryFeedback
+    private var feedback: SensoryFeedback?
     
-    public init(_ style: Style = .accent, feedback: SensoryFeedback = .selection) {
+    public init(_ style: Style = .accent, feedback: SensoryFeedback? = .selection) {
         self.style = style
         self.feedback = feedback
     }
@@ -50,7 +50,7 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
     private var foregroundColor: Color {
         switch style {
         case .accent:
-            colorSchmeForeground
+            colorSchemeForeground
         case .destructive:
                 .white
         case .dark:
@@ -62,7 +62,7 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
     private var background: Color {
         switch style {
         case .accent:
-            colorShemeBackground
+            colorSchemeBackground
         case .destructive:
                 .red
         case .dark:
@@ -70,7 +70,7 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
         }
     }
     
-    private var colorShemeBackground: Color {
+    private var colorSchemeBackground: Color {
         switch colorScheme {
         case .dark:
                 .white
@@ -81,7 +81,7 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
         }
     }
     
-    var colorSchmeForeground: Color {
+    var colorSchemeForeground: Color {
         switch colorScheme {
         case .dark:
             return .black
@@ -104,9 +104,9 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
             .shadow(radius: 5)
             .opacity(opacity(for: configuration))
             .padding()
-            .sensoryFeedback(feedback, trigger: feedbackToggle)
+            .sensoryFeedback(feedback ?? .impact, trigger: feedbackToggle)
             .onChange(of: configuration.isPressed) { _, isPressed in
-                guard isPressed else { return }
+                guard isPressed, feedback != nil else { return }
                 feedbackToggle.toggle()
             }
     }

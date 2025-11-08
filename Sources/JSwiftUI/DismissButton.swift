@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-public typealias DismissButtonUI = DismissButton<EmptyView>
-
 public struct DismissButton<L: View>: View {
     
     public enum Style {
@@ -81,6 +79,8 @@ public struct DismissButton<L: View>: View {
     
 
 }
+
+public typealias DismissButtonUI = DismissButton<EmptyView>
 
 public extension DismissButton {
     
