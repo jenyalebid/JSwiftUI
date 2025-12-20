@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct PrimaryActionButtonStyleSettings {
-    
     var labelFont: Font = .title2
+    var setPadding: Bool = true
 }
 
 extension EnvironmentValues {
@@ -20,6 +20,12 @@ public extension View {
     func primaryActionButtonFont(_ font: Font) -> some View {
         transformEnvironment(\.primaryActionButtonStyleSettings) { settings in
             settings.labelFont = font
+        }
+    }
+    
+    func primaryActionButtonHasPadding(_ setPadding: Bool) -> some View {
+        transformEnvironment(\.primaryActionButtonStyleSettings) { settings in
+            settings.setPadding = setPadding
         }
     }
 }
@@ -93,6 +99,23 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
     }
     
     public func makeBody(configuration: Configuration) -> some View {
+        Group {
+            if settings.setPadding {
+                label(configuration: configuration)
+                    .padding()
+            }
+            else {
+                label(configuration: configuration)
+            }
+        }
+        .sensoryFeedback(feedback ?? .impact, trigger: feedbackToggle)
+        .onChange(of: configuration.isPressed) { _, isPressed in
+            guard isPressed, feedback != nil else { return }
+            feedbackToggle.toggle()
+        }
+    }
+    
+    func label(configuration: Configuration) -> some View {
         configuration.label
             .font(settings.labelFont)
             .fontWeight(.bold)
@@ -103,12 +126,6 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
             .clipShape(Capsule())
             .shadow(radius: 5)
             .opacity(opacity(for: configuration))
-            .padding()
-            .sensoryFeedback(feedback ?? .impact, trigger: feedbackToggle)
-            .onChange(of: configuration.isPressed) { _, isPressed in
-                guard isPressed, feedback != nil else { return }
-                feedbackToggle.toggle()
-            }
     }
     
     private func opacity(for config: Configuration) -> Double {
