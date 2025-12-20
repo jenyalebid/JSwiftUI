@@ -45,6 +45,7 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
     public enum Style {
         case accent
         case destructive
+        case loading
         case dark // To go around iOS 18 ButtonStyle issue for custom manual set ColorScheme.
     }
     
@@ -57,6 +58,8 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
         switch style {
         case .accent:
             colorSchemeForeground
+        case .loading:
+                .primary
         case .destructive:
                 .white
         case .dark:
@@ -69,6 +72,8 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
         switch style {
         case .accent:
             colorSchemeBackground
+        case .loading:
+                .clear
         case .destructive:
                 .red
         case .dark:
@@ -117,6 +122,7 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
     
     func label(configuration: Configuration) -> some View {
         configuration.label
+            .opacity(style == .loading ? 0 : 1)
             .font(settings.labelFont)
             .fontWeight(.bold)
             .foregroundStyle(foregroundColor)
@@ -124,8 +130,15 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
             .frame(maxWidth: .infinity)
             .background(background)
             .clipShape(Capsule())
+            .contentShape(Capsule())
             .shadow(radius: 5)
             .opacity(opacity(for: configuration))
+            .overlay(content: {
+                if style == .loading {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+            })
     }
     
     private func opacity(for config: Configuration) -> Double {
