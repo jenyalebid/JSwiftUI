@@ -8,6 +8,10 @@
 import SwiftUI
 @_spi(Advanced) import SwiftUIIntrospect
 
+public extension EnvironmentValues {
+    @Entry var scrollViewProxy: ScrollViewProxy?
+}
+
 struct ScrollToTopModifier: ViewModifier {
     
     @Weak private var scrollView: UIScrollView?
