@@ -15,6 +15,7 @@ public struct DismissButton<L: View>: View {
         case done
         case save
         case cancel
+        case checkmark
     }
     
     @Environment(\.dismiss) private var dismiss
@@ -42,25 +43,37 @@ public struct DismissButton<L: View>: View {
     }
 
     public var body: some View {
-        Button {
-            onDismiss?()
-            if environmentDismiss {
-                dismiss()
+        switch style {
+        case .checkmark:
+            if #available(iOS 26.0, *) {
+                Button(action: buttonAction) {
+                    checkmark
+                }
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.circle)
             }
-        } label: {
-            switch style {
-            case .custom:
-                label
-            case .xmark:
-                xmark
-            case .done:
-                Self.doneLabel
-            case .save:
-                Self.saveLabel
-            case .cancel:
-                Self.cancelLabel
+            else {
+                DismissButtonUI(style: .done, environmentDismiss: environmentDismiss, onDismiss: onDismiss)
+            }
+        default:
+            Button(action: buttonAction) {
+                switch style {
+                case .custom:
+                    label
+                case .xmark:
+                    xmark
+                case .checkmark:
+                    checkmark
+                case .done:
+                    Self.doneLabel
+                case .save:
+                    Self.saveLabel
+                case .cancel:
+                    Self.cancelLabel
+                }
             }
         }
+
     }
     
     @ViewBuilder
@@ -77,6 +90,18 @@ public struct DismissButton<L: View>: View {
         }
     }
     
+    private var checkmark: some View {
+        Image(systemName: "checkmark")
+            .font(.headline)
+            .fontWeight(.bold)
+    }
+    
+    private func buttonAction() {
+        onDismiss?()
+        if environmentDismiss {
+            dismiss()
+        }
+    }
 
 }
 
