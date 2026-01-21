@@ -14,8 +14,17 @@ public final class PresentationController<ViewHost: PresentationViewHost>: Senda
     
     internal var activeSheet: ViewHost?
     internal var activeFullScreenCover: ViewHost?
+    internal var activePopover: ViewHost?
     
-    internal var namespace: Namespace.ID?
+    public internal(set) var namespace: Namespace.ID
+    
+    public var isPresenting: Bool {
+        activeSheet != nil || activeFullScreenCover != nil || activePopover != nil
+    }
+    
+    internal init(namespace: Namespace.ID) {
+        self.namespace = namespace
+    }
     
     /// Calls presentation of a specified sheet view.
     /// - Important: `presentationController()` modifier must be attached at root view of intended
@@ -28,6 +37,10 @@ public final class PresentationController<ViewHost: PresentationViewHost>: Senda
         self.activeFullScreenCover = viewHost
     }
     
+    public func popover(for viewHost: ViewHost) {
+        self.activePopover = viewHost
+    }
+    
     /// Dismiss any actively presented sheet.
     public func dismiss() {
         activeSheet = nil
@@ -37,29 +50,34 @@ public final class PresentationController<ViewHost: PresentationViewHost>: Senda
 
 fileprivate struct PresentationControllerModifier<ViewHost: PresentationViewHost>: ViewModifier {
     
-    @State private var controller = PresentationController<ViewHost>()
-    @Namespace private var namespace
+    @State private var controller: PresentationController<ViewHost>
+//    @Namespace private var namespace
+
+    init( namespace: Namespace.ID) {
+        _controller = State(wrappedValue: PresentationController<ViewHost>(namespace: namespace))
+    }
     
     func body(content: Content) -> some View {
         content
             .environment(controller)
+            .popover(item: $controller.activePopover, content: { popover in
+                popover
+                    .presentationController(for: ViewHost.self, namespace: controller.namespace)
+            })
             .sheet(item: $controller.activeSheet) { sheet in
                 sheet
-                    .presentationController(for: ViewHost.self)
+                    .presentationController(for: ViewHost.self, namespace: controller.namespace)
             }
             .fullScreenCover(item: $controller.activeFullScreenCover) { sheet in
                 sheet
-                    .presentationController(for: ViewHost.self)
-            }
-            .onAppear {
-                controller.namespace = namespace
+                    .presentationController(for: ViewHost.self, namespace: controller.namespace)
             }
     }
 }
 
 public extension View {
-    func presentationController<ViewHost: PresentationViewHost>(for ViewHost: ViewHost.Type) -> some View {
-        modifier(PresentationControllerModifier<ViewHost>())
+    func presentationController<ViewHost: PresentationViewHost>(for ViewHost: ViewHost.Type, namespace: Namespace.ID) -> some View {
+        modifier(PresentationControllerModifier<ViewHost>(namespace: namespace))
     }
 }
 

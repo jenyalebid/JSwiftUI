@@ -12,8 +12,8 @@ public extension View {
     /// Sets the foreground style of view to white or black determined on current background
     /// for best clarity.
     @ViewBuilder
-    func readableForeground(for color: Color, isEnabled: Bool = true) -> some View {
-        if isEnabled {
+    func readableForeground(for color: Color?, isEnabled: Bool = true) -> some View {
+        if isEnabled, let color {
             self.readableForeground(for: color)
         }
         else {
