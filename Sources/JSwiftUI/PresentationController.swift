@@ -63,14 +63,17 @@ fileprivate struct PresentationControllerModifier<ViewHost: PresentationViewHost
             .popover(item: $controller.activePopover, content: { popover in
                 popover
                     .presentationController(for: ViewHost.self, namespace: controller.namespace)
+                    .environment(\.isPresentedOverRoot, true)
             })
             .sheet(item: $controller.activeSheet) { sheet in
                 sheet
                     .presentationController(for: ViewHost.self, namespace: controller.namespace)
+                    .environment(\.isPresentedOverRoot, true)
             }
             .fullScreenCover(item: $controller.activeFullScreenCover) { sheet in
                 sheet
                     .presentationController(for: ViewHost.self, namespace: controller.namespace)
+                    .environment(\.isPresentedOverRoot, true)
             }
     }
 }
