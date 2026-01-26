@@ -19,6 +19,7 @@ public struct DismissButton<L: View>: View {
     }
     
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
     
     @ViewBuilder
     private var label: L
@@ -46,11 +47,18 @@ public struct DismissButton<L: View>: View {
         switch style {
         case .checkmark:
             if #available(iOS 26.0, *) {
-                Button(action: buttonAction) {
-                    checkmark
-                }
-                .buttonStyle(.borderedProminent)
-                .buttonBorderShape(.circle)
+//                if style == .checkmark {
+                    Button(role: .close, action: buttonAction) {
+                        checkmark
+                    }
+//                }
+//                else { // Issues with prominent with sheets.
+//                    Button(role: .confirm, action: buttonAction) {
+//                        checkmark
+//                    }
+//                    .buttonStyle(.borderedProminent)
+//                    .buttonBorderShape(.circle)
+//                }
             }
             else {
                 DismissButtonUI(style: .done, environmentDismiss: environmentDismiss, onDismiss: onDismiss)
