@@ -51,7 +51,6 @@ public final class PresentationController<ViewHost: PresentationViewHost>: Senda
 fileprivate struct PresentationControllerModifier<ViewHost: PresentationViewHost>: ViewModifier {
     
     @State private var controller: PresentationController<ViewHost>
-//    @Namespace private var namespace
 
     init( namespace: Namespace.ID) {
         _controller = State(wrappedValue: PresentationController<ViewHost>(namespace: namespace))
@@ -78,9 +77,25 @@ fileprivate struct PresentationControllerModifier<ViewHost: PresentationViewHost
     }
 }
 
+fileprivate struct PresentationNamespaceModifier<ViewHost: PresentationViewHost>: ViewModifier {
+    
+    @Namespace private var namespace
+
+    func body(content: Content) -> some View {
+        content
+            .presentationController(for: ViewHost.self, namespace: namespace)
+        
+    }
+}
+
 public extension View {
     func presentationController<ViewHost: PresentationViewHost>(for ViewHost: ViewHost.Type, namespace: Namespace.ID) -> some View {
         modifier(PresentationControllerModifier<ViewHost>(namespace: namespace))
+    }
+    
+    @ViewBuilder
+    func presentationController<ViewHost: PresentationViewHost>(for ViewHost: ViewHost.Type) -> some View {
+        self.modifier(PresentationNamespaceModifier<ViewHost>())
     }
 }
 
