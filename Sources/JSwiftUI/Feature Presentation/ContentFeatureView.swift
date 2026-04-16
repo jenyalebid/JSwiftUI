@@ -7,14 +7,21 @@
 
 import SwiftUI
 
-struct ContentFeatureView: View {
-    
+public struct ContentFeatureView: View {
+
     var image: ImageResource?
     var systemImage: String?
     var title: String
     var description: Text
-    
-    var body: some View {
+
+    public init(image: ImageResource? = nil, systemImage: String? = nil, title: String, description: Text) {
+        self.image = image
+        self.systemImage = systemImage
+        self.title = title
+        self.description = description
+    }
+
+    public var body: some View {
         HStack(spacing: 0) {
             Group {
                 if let systemImage {
